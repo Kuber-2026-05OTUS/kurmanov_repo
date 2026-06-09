@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: homework-web
+  namespace: homework
+
+spec:
+  restartPolicy: Always
+
+  volumes:
+    - name: homework-volume
+      emptyDir: {}
+
+  initContainers:
+    - name: init-index
+      image: busybox:1.36
+      command:
+        - sh
+        - -c
+        - |
+          wget -O /init/index.html http://example.com
+      volumeMounts:
+        - name: homework-volume
+          mountPath: /init
+
+  containers:
+    - name: web
+      image: python:3.12-alpine
+      command:
+        - sh
+        - -c
+        - |
+          cd /homework && python -m http.server 8000
+      ports:
+        - containerPort: 8000
+      volumeMounts:
+        - name: homework-volume
+          mountPath: /homework
+      lifecycle:
+        preStop:
+          exec:
+            command:
+              - sh
+              - -c
+              - rm -f /homework/index.html

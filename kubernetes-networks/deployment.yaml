@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homework-web
+  namespace: homework
+  labels:
+    app: homework-web
+
+spec:
+  replicas: 3
+
+  selector:
+    matchLabels:
+      app: homework-web
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+
+  template:
+    metadata:
+      labels:
+        app: homework-web
+
+    spec:
+      nodeSelector:
+        homework: "true"
+
+      restartPolicy: Always
+
+      volumes:
+        - name: homework-volume
+          emptyDir: {}
+
+      initContainers:
+        - name: init-index
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              wget -O /init/index.html http://example.com
+          volumeMounts:
+            - name: homework-volume
+              mountPath: /init
+
+      containers:
+        - name: web
+          image: python:3.12-alpine
+          command:
+            - sh
+            - -c
+            - |
+              cd /homework && python -m http.server 8000
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - name: homework-volume
+              mountPath: /homework
+
+          readinessProbe:
+            httpGet:
+              path: /index.html
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - sh
+                  - -c
+                  - rm -f /homework/index.html

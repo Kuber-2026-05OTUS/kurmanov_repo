@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: homework-pvc
+  namespace: homework
+  labels:
+    app: homework-web
+
+spec:
+  accessModes:
+    - ReadWriteOnce
+
+  resources:
+    requests:
+      storage: 1Gi
+
+  # Задание с *: запрашиваем хранилище у собственного StorageClass (storageClass.yaml с именем homework-hostpath)
+  storageClassName: homework-hostpath

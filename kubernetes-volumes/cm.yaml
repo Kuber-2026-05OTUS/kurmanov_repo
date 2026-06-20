@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homework-config
+  namespace: homework
+  labels:
+    app: homework-web
+data:
+  file: |
+    Hello from ConfigMap!
+    текст примонтирован как volume в /homework/conf/file
+  app.name: homework-web
+  app.env: production

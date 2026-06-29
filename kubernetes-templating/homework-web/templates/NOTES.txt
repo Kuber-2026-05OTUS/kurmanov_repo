@@ -1,0 +1,31 @@
+Релиз "{{ .Release.Name }}" успешно установлен в namespace "{{ .Release.Namespace }}".
+
+Приложение доступно по следующему адресу:
+
+1. Внутри кластера (DNS-имя сервиса):
+
+   http://{{ include "homework-web.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.port }}
+
+{{- if .Values.httpRoute.enabled }}
+
+2. Снаружи через HTTPRoute (Gateway API):
+{{- range .Values.httpRoute.hostnames }}
+   http://{{ . }}/
+{{- end }}
+{{- else if .Values.ingress.enabled }}
+
+2. Снаружи через Ingress:
+{{- range .Values.ingress.hosts }}
+   http{{ if $.Values.ingress.tls }}s{{ end }}://{{ .host }}/
+{{- end }}
+{{- else }}
+
+2. Локальный доступ через port-forward:
+
+   kubectl port-forward --namespace {{ .Release.Namespace }} svc/{{ include "homework-web.fullname" . }} 8080:{{ .Values.service.port }}
+
+   Затем откройте в браузере: http://127.0.0.1:8080/
+{{- end }}
+
+Проверить статус релиза:
+   helm status {{ .Release.Name }} --namespace {{ .Release.Namespace }}

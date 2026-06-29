@@ -1,0 +1,25 @@
+# Values для релиза kafka-prod (bitnami/kafka, чарт 25.3.5, kafka 3.5.2)
+# Требования ДЗ: namespace prod, 5 брокеров, kafka 3.5.2, протокол SASL_PLAINTEXT
+
+# 5 брокеров (KRaft combined-режим: узлы являются и контроллером, и брокером)
+controller:
+  replicaCount: 5
+
+# Образ kafka 3.5.2. bitnami удалил публичные образы — берём из bitnamilegacy.
+image:
+  registry: docker.io
+  repository: bitnamilegacy/kafka
+  tag: 3.5.2-debian-12-r30
+
+global:
+  security:
+    allowInsecureImages: true   # разрешить неофициальный (legacy) образ
+
+# Протокол клиентских, межброкерных и контроллерных взаимодействий — SASL_PLAINTEXT
+listeners:
+  client:
+    protocol: SASL_PLAINTEXT
+  interbroker:
+    protocol: SASL_PLAINTEXT
+  controller:
+    protocol: SASL_PLAINTEXT

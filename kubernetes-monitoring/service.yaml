@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-app
+  labels:
+    app: nginx-app
+spec:
+  selector:
+    app: nginx-app
+  ports:
+    - name: http                   # имя порта для веб-трафика
+      port: 80                     # порт самого Service
+      targetPort: http             # на какой порт пода направлять (по имени http)
+    - name: metrics                # ВАЖНО: именованный порт для ServiceMonitor
+      port: 9113                   # порт Service для метрик
+      targetPort: metrics          # порт пода с экспортером (по имени metrics)

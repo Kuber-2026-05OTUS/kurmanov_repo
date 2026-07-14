@@ -1,0 +1,12 @@
+azamat@azamat-kurmanov:~/IdeaProjects/kubernetes_as_infra$ kubectl get daemonset -n logging
+NAME       DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+promtail   2         2         2       2            2           <none>          15m
+
+
+azamat@azamat-kurmanov:~/IdeaProjects/kubernetes_as_infra$ kubectl get pods -n logging -o wide
+NAME                            READY   STATUS    RESTARTS   AGE   IP              NODE                        NOMINATED NODE   READINESS GATES
+grafana-df5b4b8f7-s9sgn         1/1     Running   0          12m   10.112.130.8    cl12lqsgp4a4a2pacelv-upev   <none>           <none>
+loki-0                          2/2     Running   0          37m   10.112.130.6    cl12lqsgp4a4a2pacelv-upev   <none>           <none>
+loki-gateway-66dbfcdd46-zgw56   1/1     Running   0          37m   10.112.130.5    cl12lqsgp4a4a2pacelv-upev   <none>           <none>
+promtail-8jrwp                  1/1     Running   0          15m   10.112.130.7    cl12lqsgp4a4a2pacelv-upev   <none>           <none>
+promtail-d2nj7                  1/1     Running   0          15m   10.112.132.14   cl1deqc2lo9atav5181r-yliq   <none>           <none>

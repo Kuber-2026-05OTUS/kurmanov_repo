@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: log-generator
+  namespace: default
+  labels:
+    app: log-generator
+spec:
+  nodeSelector:
+    role: worker
+
+  containers:
+    - name: generator
+      image: busybox:1.36
+      command:
+        - /bin/sh
+        - -c
+        - |
+          while true; do
+            echo "otus kubernetes logging test $(date)"
+            sleep 5
+          done

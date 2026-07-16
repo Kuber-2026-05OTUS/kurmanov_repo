@@ -1,0 +1,9 @@
+config:
+  clients:
+    - url: http://loki-gateway.logging.svc.cluster.local/loki/api/v1/push
+
+tolerations:
+  - key: dedicated
+    operator: Equal
+    value: infra
+    effect: NoSchedule

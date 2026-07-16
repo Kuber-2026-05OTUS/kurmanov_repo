@@ -1,0 +1,10 @@
+azamat@azamat-kurmanov:~$ kubectl get nodes -o wide --show-labels
+NAME                        STATUS   ROLES    AGE     VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION       CONTAINER-RUNTIME     LABELS
+cl12lqsgp4a4a2pacelv-ubiz   Ready    <none>   5m51s   v1.34.1   10.129.0.22   <none>        Ubuntu 22.04.5 LTS   5.15.0-181-generic   containerd://2.2.1    beta.kubernetes.io/arch=amd64,beta.kubernetes.io/instance-type=standard-v3,beta.kubernetes.io/os=linux,failure-domain.beta.kubernetes.io/zone=ru-central1-b,kubernetes.io/arch=amd64,kubernetes.io/hostname=cl12lqsgp4a4a2pacelv-ubiz,kubernetes.io/os=linux,node.kubernetes.io/instance-type=standard-v3,node.kubernetes.io/kube-proxy-ds-ready=true,node.kubernetes.io/masq-agent-ds-ready=true,node.kubernetes.io/node-problem-detector-ds-ready=true,role=infra,topology.kubernetes.io/zone=ru-central1-b,yandex.cloud/node-group-id=cat7e3vnj0httj1mvtfp,yandex.cloud/pci-topology=k8s,yandex.cloud/preemptible=false
+cl1deqc2lo9atav5181r-omyl   Ready    <none>   5m25s   v1.34.1   10.129.0.15   <none>        Ubuntu 22.04.5 LTS   5.15.0-181-generic   containerd://1.7.27   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/instance-type=standard-v3,beta.kubernetes.io/os=linux,failure-domain.beta.kubernetes.io/zone=ru-central1-b,kubernetes.io/arch=amd64,kubernetes.io/hostname=cl1deqc2lo9atav5181r-omyl,kubernetes.io/os=linux,node.kubernetes.io/instance-type=standard-v3,node.kubernetes.io/kube-proxy-ds-ready=true,node.kubernetes.io/masq-agent-ds-ready=true,node.kubernetes.io/node-problem-detector-ds-ready=true,role=worker,topology.kubernetes.io/zone=ru-central1-b,yandex.cloud/node-group-id=catc1kbtlp8piqmsg73p,yandex.cloud/pci-topology=k8s,yandex.cloud/preemptible=false
+
+
+azamat@azamat-kurmanov:~$ kubectl get nodes -o custom-columns=NAME:.metadata.name,TAINTS:.spec.taints
+NAME                        TAINTS
+cl12lqsgp4a4a2pacelv-ubiz   [map[effect:NoSchedule key:dedicated value:infra]]
+cl1deqc2lo9atav5181r-omyl   <none>

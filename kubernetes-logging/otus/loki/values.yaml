@@ -1,0 +1,81 @@
+deploymentMode: SingleBinary
+
+loki:
+  auth_enabled: false
+
+  commonConfig:
+    replication_factor: 1
+
+  schemaConfig:
+    configs:
+      - from: "2024-04-01"
+        store: tsdb
+        object_store: s3
+        schema: v13
+        index:
+          prefix: loki_index_
+          period: 24h
+
+  storage:
+    type: s3
+
+    bucketNames:
+      chunks: otus-loki-logs
+      ruler: otus-loki-logs
+      admin: otus-loki-logs
+
+    s3:
+      endpoint: storage.yandexcloud.net
+      region: ru-central1
+      accessKeyId: "YCAJEbuT8omt34wGGVc4_tsl9"
+      secretAccessKey: "YCMLUrK00sBpYPG5f-Ace9CpdJv2NVSgjbfgB_pw"
+      s3ForcePathStyle: true
+      insecure: false
+
+minio:
+  enabled: false
+
+singleBinary:
+  replicas: 1
+
+  nodeSelector:
+    role: infra
+
+  tolerations:
+    - key: dedicated
+      operator: Equal
+      value: infra
+      effect: NoSchedule
+
+backend:
+  replicas: 0
+
+read:
+  replicas: 0
+
+write:
+  replicas: 0
+
+gateway:
+  replicas: 1
+
+  nodeSelector:
+    role: infra
+
+  tolerations:
+    - key: dedicated
+      operator: Equal
+      value: infra
+      effect: NoSchedule
+
+lokiCanary:
+  enabled: false
+
+test:
+  enabled: false
+
+chunksCache:
+  enabled: false
+
+resultsCache:
+  enabled: false

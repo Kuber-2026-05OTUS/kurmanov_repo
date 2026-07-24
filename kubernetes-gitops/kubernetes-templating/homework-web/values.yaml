@@ -166,13 +166,13 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 # Additional volumes on the output Deployment definition.
-volumes:
- - name: homework-volume
-   persistentVolumeClaim:
-     claimName: homework-web-pvc
- - name: homework-config
-   configMap:
-     name: homework-web-config
+#volumes:
+# - name: homework-volume
+#   persistentVolumeClaim:
+#     claimName: homework-web-pvc
+# - name: homework-config
+#   configMap:
+#     name: homework-web-config
 #   secret:
 #     secretName: mysecret
 #     optional: false

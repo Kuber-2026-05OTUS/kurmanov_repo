@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1               # Версия API Argo CD
 kind: Application                              # Объект Application — приложение, которым управляет Argo CD
 metadata:
-  name: kubernetes-networks                    # Имя приложения в UI/CLI Argo CD
+  name: homework-templating                    # Имя приложения в UI/CLI Argo CD
   namespace: argocd                            # Application всегда живёт в namespace самого Argo CD
 
 spec:
@@ -10,12 +10,20 @@ spec:
   source:                                      # Откуда брать манифесты
     repoURL: https://github.com/Kuber-2026-05OTUS/kurmanov_repo.git   # Git-репозиторий с манифестами
     targetRevision: kubernetes-gitops          # Ветка (или тег/коммит), из которой синхронизируемся
-    path: kubernetes-networks                  # Каталог в репозитории: обычные манифесты ДЗ по сети
+    path: kubernetes-templating/homework-web   # Каталог в репозитории: Helm-чарт homework-web
+
+    helm:                                      # Переопределение values чарта прямо из Application
+      values: |
+        replicaCount: 2                        # Запускать 2 реплики вместо значения по умолчанию
 
   destination:                                 # Куда разворачивать
     server: https://kubernetes.default.svc     # Целевой кластер — тот же, где работает Argo CD
-    namespace: homework                        # Namespace для ресурсов приложения
+    namespace: homeworkhelm                    # Namespace для ресурсов приложения
 
-  syncPolicy:                                  # Политика синхронизации: автосинхронизация не включена, только вручную
+  syncPolicy:                                  # Политика синхронизации
+    automated:                                 # Автоматическая синхронизация при изменениях в Git
+      prune: true                              # Удалять ресурсы, убранные из Git
+      selfHeal: true                           # Откатывать ручные правки в кластере до состояния из Git
+
     syncOptions:
       - CreateNamespace=true                   # Создавать namespace, если его ещё нет

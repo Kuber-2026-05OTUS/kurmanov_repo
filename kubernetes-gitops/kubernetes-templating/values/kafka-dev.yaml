@@ -1,0 +1,25 @@
+# Values для релиза kafka-dev (bitnami/kafka, последний чарт, kafka 4.0.0)
+# Требования ДЗ: namespace dev, 1 брокер, последняя версия kafka, протокол PLAINTEXT, авторизация отключена
+
+# 1 брокер
+controller:
+  replicaCount: 1
+
+# Образ из bitnamilegacy (bitnami удалил публичные образы).
+# tag не задаём — берётся дефолт чарта (последняя версия kafka).
+image:
+  registry: docker.io
+  repository: bitnamilegacy/kafka
+
+global:
+  security:
+    allowInsecureImages: true   # разрешить неофициальный (legacy) образ
+
+# Протокол PLAINTEXT для всех взаимодействий = авторизация отключена
+listeners:
+  client:
+    protocol: PLAINTEXT
+  interbroker:
+    protocol: PLAINTEXT
+  controller:
+    protocol: PLAINTEXT

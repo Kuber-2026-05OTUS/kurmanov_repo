@@ -1,0 +1,17 @@
+azamat@azamat-kurmanov:~/IdeaProjects/kubernetes_as_infra$ kubectl get nodes
+NAME                        STATUS   ROLES    AGE   VERSION
+cl1rvofj6eodamgm01tv-ekub   Ready    <none>   21h   v1.34.1
+cl1uem5igcdo1eio7rga-ybog   Ready    <none>   21h   v1.34.1
+
+
+azamat@azamat-kurmanov:~/IdeaProjects/kubernetes_as_infra$ kubectl get nodes --show-labels
+NAME                        STATUS   ROLES    AGE   VERSION   LABELS
+cl1rvofj6eodamgm01tv-ekub   Ready    <none>   21h   v1.34.1   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/instance-type=standard-v3,beta.kubernetes.io/os=linux,failure-domain.beta.kubernetes.io/zone=ru-central1-a,homework=true,kubernetes.io/arch=amd64,kubernetes.io/hostname=cl1rvofj6eodamgm01tv-ekub,kubernetes.io/os=linux,node-role=worker,node.kubernetes.io/instance-type=standard-v3,node.kubernetes.io/kube-proxy-ds-ready=true,node.kubernetes.io/masq-agent-ds-ready=true,node.kubernetes.io/node-problem-detector-ds-ready=true,topology.kubernetes.io/zone=ru-central1-a,yandex.cloud/node-group-id=catb5eejnnceleg8n50k,yandex.cloud/pci-topology=k8s,yandex.cloud/preemptible=false
+cl1uem5igcdo1eio7rga-ybog   Ready    <none>   21h   v1.34.1   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/instance-type=standard-v3,beta.kubernetes.io/os=linux,failure-domain.beta.kubernetes.io/zone=ru-central1-a,kubernetes.io/arch=amd64,kubernetes.io/hostname=cl1uem5igcdo1eio7rga-ybog,kubernetes.io/os=linux,node-role=infra,node.kubernetes.io/instance-type=standard-v3,node.kubernetes.io/kube-proxy-ds-ready=true,node.kubernetes.io/masq-agent-ds-ready=true,node.kubernetes.io/node-problem-detector-ds-ready=true,topology.kubernetes.io/zone=ru-central1-a,yandex.cloud/node-group-id=cat05qn3unva0m318136,yandex.cloud/pci-topology=k8s,yandex.cloud/preemptible=false
+
+
+azamat@azamat-kurmanov:~/IdeaProjects/kubernetes_as_infra$ kubectl describe node cl1rvofj6eodamgm01tv-ekub | grep Taints
+Taints:             <none>
+
+azamat@azamat-kurmanov:~/IdeaProjects/kubernetes_as_infra$ kubectl describe node cl1uem5igcdo1eio7rga-ybog | grep Taints
+Taints:             node-role=infra:NoSchedule

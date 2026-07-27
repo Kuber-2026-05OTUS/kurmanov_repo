@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1               # Версия API Argo CD
+kind: AppProject                               # Объект AppProject — общие ограничения для группы приложений
+metadata:
+  name: otus                                   # Имя проекта, на него ссылаются Application через spec.project
+  namespace: argocd                            # AppProject всегда живёт в namespace самого Argo CD
+
+spec:
+  description: OTUS Kubernetes homework project  # Описание проекта, отображается в UI
+
+  sourceRepos:                                 # Белый список репозиториев-источников
+    - https://github.com/Kuber-2026-05OTUS/kurmanov_repo.git   # Разрешён только этот репозиторий
+
+  destinations:                                # Белый список целей деплоя (кластер + namespace)
+    - namespace: homework                      # ДЗ по сети
+      server: https://kubernetes.default.svc   # Локальный кластер, в котором работает Argo CD
+    - namespace: homeworkhelm                  # ДЗ по шаблонизации (Helm)
+      server: https://kubernetes.default.svc   # Локальный кластер, в котором работает Argo CD
+
+  clusterResourceWhitelist:                    # Какие кластерные (не namespaced) ресурсы разрешено создавать
+    - group: ""                                # Core API-группа
+      kind: Namespace                          # Разрешён только Namespace
+
+  namespaceResourceWhitelist:                  # Какие namespaced-ресурсы разрешено создавать
+    - group: "*"                               # Любая API-группа
+      kind: "*"                                # Любой тип ресурса

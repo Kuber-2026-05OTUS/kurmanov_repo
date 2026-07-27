@@ -1,0 +1,17 @@
+global:                        # Глобальные настройки, применяемые ко всем компонентам Argo CD
+  nodeSelector:                # Планировать поды только на узлы с указанной меткой
+    node-role: infra           # Узел должен иметь метку node-role=infra
+
+  tolerations:                 # Толерантности: позволяют подам запускаться на узлах с taint'ами
+    - key: node-role           # Ключ taint'а, который под готов терпеть
+      operator: Equal          # Условие совпадения: значение ключа должно быть равно value
+      value: infra             # Значение taint'а — infra
+      effect: NoSchedule       # Тип taint'а: без толерантности под не будет назначен на узел
+
+configs:
+  params:
+    server.insecure: true      # Запускать argocd-server по HTTP без TLS (TLS терминируется извне, напр. на Ingress)
+
+server:
+  service:
+    type: ClusterIP            # Тип сервиса — только внутренний доступ в кластере (доступ снаружи через Ingress)

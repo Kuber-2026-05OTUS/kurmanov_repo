@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1               # Версия API Argo CD
+kind: Application                              # Объект Application — приложение, которым управляет Argo CD
+metadata:
+  name: kubernetes-networks                    # Имя приложения в UI/CLI Argo CD
+  namespace: argocd                            # Application всегда живёт в namespace самого Argo CD
+
+spec:
+  project: otus                                # AppProject, задающий ограничения (репозитории, namespace, ресурсы)
+
+  source:                                      # Откуда брать манифесты
+    repoURL: https://github.com/Kuber-2026-05OTUS/kurmanov_repo.git   # Git-репозиторий с манифестами
+    targetRevision: kubernetes-gitops          # Ветка (или тег/коммит), из которой синхронизируемся
+    path: kubernetes-networks                  # Каталог в репозитории: обычные манифесты ДЗ по сети
+
+  destination:                                 # Куда разворачивать
+    server: https://kubernetes.default.svc     # Целевой кластер — тот же, где работает Argo CD
+    namespace: homework                        # Namespace для ресурсов приложения
+
+  syncPolicy:                                  # Политика синхронизации: автосинхронизация не включена, только вручную
+    syncOptions:
+      - CreateNamespace=true                   # Создавать namespace, если его ещё нет

@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1   # API группы оператора Prometheus (CRD)
+kind: ServiceMonitor
+metadata:
+  name: nginx-app
+  namespace: monitoring                # держим рядом с Prometheus
+  labels:
+    release: monitoring                # по этой метке Prometheus его подхватит (serviceMonitorSelector)
+spec:
+  selector:
+    matchLabels:                       # ищем Service с такой меткой
+      app: nginx-app                   # должно совпадать с metadata.labels у Service
+  namespaceSelector:
+    matchNames:
+      - default                        # namespace, где живёт Service
+  endpoints:
+    - port: metrics                    # имя порта из Service, откуда забирать метрики
+      path: /metrics                   # HTTP-путь с метриками
+      interval: 15s                    # как часто опрашивать (scrape) цель

@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-app
+  labels:
+    app: nginx-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-app
+  template:
+    metadata:
+      name: nginx-app
+      labels:
+        app: nginx-app
+    spec:
+      containers:
+        - name: nginx                   # контейнер 1 — веб-сервер
+          image: azik1985/nginx-stub:1.0  # кастомный образ (Docker Hub)
+          ports:
+            - containerPort: 80         # порт, который слушает nginx
+              name: http                # имя порта (на него ссылается Service по targetPort)
+        - name: exporter                # контейнер 2 (sidecar) — экспортер метрик
+          image: nginx/nginx-prometheus-exporter:latest  # официальный экспортер nginx
+          args:
+            - -nginx.scrape-uri=http://localhost/stub_status  # откуда читать статистику (по localhost, т.к. один под)
+          ports:
+            - containerPort: 9113       # порт, на котором экспортер отдаёт /metrics
+              name: metrics             # имя порта (на него ссылается Service и ServiceMonitor)
+      restartPolicy: Always             # перезапускать контейнеры при падении

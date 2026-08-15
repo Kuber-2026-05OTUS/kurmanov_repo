@@ -1,0 +1,7 @@
+Node                       Address            Status  Type    Build  Protocol  DC   Partition  Segment
+consul-server-0            10.112.130.8:8301  alive   server  2.0.3  2         dc1  default    <all>
+consul-server-1            10.112.129.6:8301  alive   server  2.0.3  2         dc1  default    <all>
+consul-server-2            10.112.128.7:8301  alive   server  2.0.3  2         dc1  default    <all>
+cl121sa6fa8vgg8t349e-ediq  10.112.128.6:8301  alive   client  2.0.3  2         dc1  default    <default>
+cl121sa6fa8vgg8t349e-ifuc  10.112.129.5:8301  alive   client  2.0.3  2         dc1  default    <default>
+cl121sa6fa8vgg8t349e-ofaf  10.112.130.7:8301  alive   client  2.0.3  2         dc1  default    <default>

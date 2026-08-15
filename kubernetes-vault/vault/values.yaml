@@ -1,0 +1,53 @@
+global:
+  enabled: true
+  tlsDisable: true
+
+injector:
+  enabled: false
+
+server:
+  enabled: true
+
+  replicas: 3
+
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+
+  standalone:
+    enabled: false
+
+  ha:
+    enabled: true
+    replicas: 3
+
+    raft:
+      enabled: false
+
+    config: |
+      ui = true
+      disable_mlock = true
+
+      listener "tcp" {
+        address         = "[::]:8200"
+        cluster_address = "[::]:8201"
+        tls_disable     = 1
+      }
+
+      storage "consul" {
+        address = "consul-server.consul.svc.cluster.local:8500"
+        path    = "vault/"
+      }
+
+      service_registration "kubernetes" {}
+
+  dataStorage:
+    enabled: false
+
+ui:
+  enabled: true
+  serviceType: ClusterIP

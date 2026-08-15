@@ -1,0 +1,51 @@
+=== vault-0 ===
+Key             Value
+---             -----
+Seal Type       shamir
+Initialized     true
+Sealed          false
+Total Shares    1
+Threshold       1
+Version         2.0.4
+Build Date      2026-08-03T16:14:36Z
+Storage Type    consul
+Cluster Name    vault-cluster-1d260d22
+Cluster ID      e66411cb-d875-8141-5986-708abd852df6
+HA Enabled      true
+HA Cluster      https://vault-0.vault-internal:8201
+HA Mode         active
+Active Since    2026-08-15T21:08:02.169117415Z
+=== vault-1 ===
+Key                    Value
+---                    -----
+Seal Type              shamir
+Initialized            true
+Sealed                 false
+Total Shares           1
+Threshold              1
+Version                2.0.4
+Build Date             2026-08-03T16:14:36Z
+Storage Type           consul
+Cluster Name           vault-cluster-1d260d22
+Cluster ID             e66411cb-d875-8141-5986-708abd852df6
+HA Enabled             true
+HA Cluster             https://vault-0.vault-internal:8201
+HA Mode                standby
+Active Node Address    http://10.112.128.9:8200
+=== vault-2 ===
+Key                    Value
+---                    -----
+Seal Type              shamir
+Initialized            true
+Sealed                 false
+Total Shares           1
+Threshold              1
+Version                2.0.4
+Build Date             2026-08-03T16:14:36Z
+Storage Type           consul
+Cluster Name           vault-cluster-1d260d22
+Cluster ID             e66411cb-d875-8141-5986-708abd852df6
+HA Enabled             true
+HA Cluster             https://vault-0.vault-internal:8201
+HA Mode                standby
+Active Node Address    http://10.112.128.9:8200

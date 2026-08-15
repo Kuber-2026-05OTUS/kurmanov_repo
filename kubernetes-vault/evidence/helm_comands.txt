@@ -1,0 +1,161 @@
+=========================================================
+ДЗ №11. Хранилище секретов для приложения. Vault.
+Команды установки helm-чартов и файлы с переменными
+Все команды выполняются из папки kubernetes-vault/
+=========================================================
+
+
+---------------------------------------------------------
+0. Подключение helm-репозиториев
+---------------------------------------------------------
+helm repo add hashicorp https://helm.releases.hashicorp.com
+helm repo add external-secrets https://charts.external-secrets.io
+helm repo update
+
+
+---------------------------------------------------------
+1. Consul (namespace: consul), 3 реплики сервера
+   Чарт: https://github.com/hashicorp/consul-k8s.git
+   Файл с переменными: consul/values.yaml
+---------------------------------------------------------
+kubectl create namespace consul
+
+helm install consul hashicorp/consul \
+  --namespace consul \
+  --values consul/values.yaml
+
+# Проверка:
+# kubectl get pods -n consul -o wide
+# kubectl get pvc -n consul
+# kubectl exec -n consul consul-server-0 -- consul members
+# kubectl exec -n consul consul-server-0 -- consul operator raft list-peers
+
+--- содержимое consul/values.yaml ---
+global:
+  name: consul
+  datacenter: dc1
+
+server:
+  enabled: true
+  replicas: 3
+  bootstrapExpect: 3
+
+  storage: 10Gi
+
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+
+client:
+  enabled: true
+
+connectInject:
+  enabled: false
+
+ui:
+  enabled: true
+  service:
+    type: ClusterIP
+--- конец consul/values.yaml ---
+
+
+---------------------------------------------------------
+2. HashiCorp Vault (namespace: vault), HA режим,
+   бэкенд — ранее установленный Consul
+   Чарт: https://github.com/hashicorp/vault-helm.git
+   Файл с переменными: vault/values.yaml
+---------------------------------------------------------
+kubectl create namespace vault
+
+helm install vault hashicorp/vault \
+  --namespace vault \
+  --values vault/values.yaml
+
+# Проверка:
+# kubectl get pods -n vault -o wide
+# kubectl exec -n vault vault-0 -- vault status
+
+--- содержимое vault/values.yaml ---
+global:
+  enabled: true
+  tlsDisable: true
+
+injector:
+  enabled: false
+
+server:
+  enabled: true
+
+  replicas: 3
+
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+
+  standalone:
+    enabled: false
+
+  ha:
+    enabled: true
+    replicas: 3
+
+    raft:
+      enabled: false
+
+    config: |
+      ui = true
+      disable_mlock = true
+
+      listener "tcp" {
+        address         = "[::]:8200"
+        cluster_address = "[::]:8201"
+        tls_disable     = 1
+      }
+
+      storage "consul" {
+        address = "consul-server.consul.svc.cluster.local:8500"
+        path    = "vault/"
+      }
+
+      service_registration "kubernetes" {}
+
+  dataStorage:
+    enabled: false
+
+ui:
+  enabled: true
+  serviceType: ClusterIP
+--- конец vault/values.yaml ---
+
+
+---------------------------------------------------------
+3. External Secrets Operator (namespace: vault)
+   Чарт: external-secrets/external-secrets
+   Файл с переменными: external-secrets/values.yaml
+---------------------------------------------------------
+helm install external-secrets external-secrets/external-secrets \
+  --namespace vault \
+  --values external-secrets/values.yaml
+
+# Проверка:
+# kubectl get pods -n vault -o wide
+# kubectl get secretstore,externalsecret -n vault
+
+--- содержимое external-secrets/values.yaml ---
+installCRDs: true
+--- конец external-secrets/values.yaml ---
+
+
+---------------------------------------------------------
+Установленные релизы
+---------------------------------------------------------
+helm list -n consul
+helm list -n vault

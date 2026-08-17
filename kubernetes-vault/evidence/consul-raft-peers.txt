@@ -1,0 +1,4 @@
+Node             ID                                    Address            State     Voter  RaftProtocol  Commit Index  Trails Leader By
+consul-server-0  9f96b821-0f0c-b9b1-f9b1-736facb3e6ad  10.112.130.8:8300  follower  true   3             139           0 commits
+consul-server-1  5120e8c3-caa5-f008-e1c3-f441f7ceb291  10.112.129.6:8300  follower  true   3             139           0 commits
+consul-server-2  fab283c4-2f40-97f4-99c9-a6aa3a1fbb01  10.112.128.7:8300  leader    true   3             139           -

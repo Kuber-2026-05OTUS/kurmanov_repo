@@ -1,0 +1,8 @@
+NAME                  READY   STATUS      RESTARTS   AGE   IP             NODE                        NOMINATED NODE   READINESS GATES
+consul-client-9bc8w   1/1     Running     0          12m   10.112.130.7   cl121sa6fa8vgg8t349e-ofaf   <none>           <none>
+consul-client-nhk9m   1/1     Running     0          32m   10.112.129.5   cl121sa6fa8vgg8t349e-ifuc   <none>           <none>
+consul-client-sx6zs   1/1     Running     0          12m   10.112.128.6   cl121sa6fa8vgg8t349e-ediq   <none>           <none>
+consul-server-0       1/1     Running     0          12m   10.112.130.8   cl121sa6fa8vgg8t349e-ofaf   <none>           <none>
+consul-server-1       1/1     Running     0          32m   10.112.129.6   cl121sa6fa8vgg8t349e-ifuc   <none>           <none>
+consul-server-2       1/1     Running     0          12m   10.112.128.7   cl121sa6fa8vgg8t349e-ediq   <none>           <none>
+consul-test           0/1     Completed   0          30s   10.112.128.8   cl121sa6fa8vgg8t349e-ediq   <none>           <none>

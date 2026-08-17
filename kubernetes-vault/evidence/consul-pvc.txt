@@ -1,0 +1,4 @@
+NAME                          STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS     VOLUMEATTRIBUTESCLASS   AGE
+data-consul-consul-server-0   Bound    pvc-d8103d24-730e-4e48-9e8f-5ca43ccf746f   10Gi       RWO            yc-network-hdd   <unset>                 33m
+data-consul-consul-server-1   Bound    pvc-9f380f1d-1842-4f0d-9f2f-76ba00db8b64   10Gi       RWO            yc-network-hdd   <unset>                 33m
+data-consul-consul-server-2   Bound    pvc-e8ff62a5-e0e4-4e1d-a115-30992b07a30b   10Gi       RWO            yc-network-hdd   <unset>                 33m

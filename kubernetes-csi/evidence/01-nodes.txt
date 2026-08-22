@@ -1,0 +1,2 @@
+NAME                        STATUS   ROLES    AGE   VERSION   INTERNAL-IP   EXTERNAL-IP      OS-IMAGE             KERNEL-VERSION       CONTAINER-RUNTIME
+cl165muj6ed8vu16o1ot-ajux   Ready    <none>   67m   v1.35.1   10.128.0.33   111.88.242.124   Ubuntu 22.04.5 LTS   5.15.0-181-generic   containerd://2.2.1

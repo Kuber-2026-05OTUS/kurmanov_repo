@@ -1,0 +1,11 @@
+NAME                                   READY   STATUS    RESTARTS      AGE   IP             NODE                        NOMINATED NODE   READINESS GATES
+coredns-dfd9cfcc9-ksrx6                1/1     Running   0             83m   10.112.128.4   cl165muj6ed8vu16o1ot-ajux   <none>           <none>
+csi-s3-provisioner-0                   2/2     Running   0             64s   10.112.128.8   cl165muj6ed8vu16o1ot-ajux   <none>           <none>
+csi-s3-q6djb                           2/2     Running   0             64s   10.112.128.7   cl165muj6ed8vu16o1ot-ajux   <none>           <none>
+ip-masq-agent-qfj5c                    1/1     Running   0             65m   10.128.0.33    cl165muj6ed8vu16o1ot-ajux   <none>           <none>
+kube-dns-autoscaler-86b7bddd47-5q9sn   1/1     Running   1 (64m ago)   83m   10.112.128.2   cl165muj6ed8vu16o1ot-ajux   <none>           <none>
+kube-proxy-6cphj                       1/1     Running   0             65m   10.128.0.33    cl165muj6ed8vu16o1ot-ajux   <none>           <none>
+metrics-server-59dcc6d845-hxrqg        1/1     Running   0             83m   10.112.128.6   cl165muj6ed8vu16o1ot-ajux   <none>           <none>
+metrics-server-59dcc6d845-thc94        1/1     Running   0             83m   10.112.128.5   cl165muj6ed8vu16o1ot-ajux   <none>           <none>
+npd-v0.8.0-hszjf                       1/1     Running   0             65m   10.112.128.3   cl165muj6ed8vu16o1ot-ajux   <none>           <none>
+yc-disk-csi-node-v2-qcgcw              6/6     Running   0             65m   10.128.0.33    cl165muj6ed8vu16o1ot-ajux   <none>           <none>

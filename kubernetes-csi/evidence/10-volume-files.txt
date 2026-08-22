@@ -1,0 +1,5 @@
+total 11
+drwxrwxrwx    2 root     root          4096 Aug 22 21:37 .
+drwxr-xr-x    1 root     root          4096 Aug 22 21:22 ..
+-rw-rw-rw-    1 root     root          1650 Aug 22 21:37 homework.txt
+-rw-rw-rw-    1 root     root            39 Aug 22 21:28 success.txt

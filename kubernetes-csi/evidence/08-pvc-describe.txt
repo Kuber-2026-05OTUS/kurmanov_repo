@@ -1,0 +1,21 @@
+Name:          csi-s3-pvc
+Namespace:     default
+StorageClass:  csi-s3
+Status:        Bound
+Volume:        pvc-d1d90433-94c1-406e-bcdc-54f9d3c82a37
+Labels:        <none>
+Annotations:   pv.kubernetes.io/bind-completed: yes
+               pv.kubernetes.io/bound-by-controller: yes
+               volume.beta.kubernetes.io/storage-provisioner: ru.yandex.s3.csi
+               volume.kubernetes.io/storage-provisioner: ru.yandex.s3.csi
+Finalizers:    [kubernetes.io/pvc-protection]
+Capacity:      1Gi
+Access Modes:  RWX
+VolumeMode:    Filesystem
+Used By:       <none>
+Events:
+  Type    Reason                 Age                From                                                                        Message
+  ----    ------                 ----               ----                                                                        -------
+  Normal  Provisioning           53s                ru.yandex.s3.csi_csi-s3-provisioner-0_e849d0c3-6527-44eb-a7d5-2d1fa7ca504a  External provisioner is provisioning volume for claim "default/csi-s3-pvc"
+  Normal  ExternalProvisioning   53s (x2 over 53s)  persistentvolume-controller                                                 Waiting for a volume to be created either by the external provisioner 'ru.yandex.s3.csi' or manually by the system administrator. If volume creation is delayed, please verify that the provisioner is running and correctly registered.
+  Normal  ProvisioningSucceeded  52s                ru.yandex.s3.csi_csi-s3-provisioner-0_e849d0c3-6527-44eb-a7d5-2d1fa7ca504a  Successfully provisioned volume pvc-d1d90433-94c1-406e-bcdc-54f9d3c82a37

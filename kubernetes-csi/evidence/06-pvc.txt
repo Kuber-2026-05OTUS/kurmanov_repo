@@ -1,0 +1,2 @@
+NAME         STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE   VOLUMEMODE
+csi-s3-pvc   Bound    pvc-d1d90433-94c1-406e-bcdc-54f9d3c82a37   1Gi        RWX            csi-s3         <unset>                 51s   Filesystem

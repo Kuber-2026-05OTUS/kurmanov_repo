@@ -1,0 +1,2 @@
+NAME            READY   STATUS    RESTARTS   AGE   IP              NODE                        NOMINATED NODE   READINESS GATES
+csi-s3-writer   1/1     Running   0          14m   10.112.128.11   cl165muj6ed8vu16o1ot-ajux   <none>           <none>

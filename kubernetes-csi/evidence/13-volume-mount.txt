@@ -1,0 +1,1 @@
+otus-csi-azamat-2026 on /data type fuse.geesefs (rw,relatime,user_id=65534,group_id=65534,default_permissions,allow_other)

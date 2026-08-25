@@ -1,0 +1,2 @@
+NAME  	NAMESPACE  	REVISION	UPDATED                                	STATUS  	CHART        	APP VERSION
+csi-s3	kube-system	1       	2026-08-23 01:47:46.742503547 +0500 +05	deployed	csi-s3-0.43.7	0.43.7     

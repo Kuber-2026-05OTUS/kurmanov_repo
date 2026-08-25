@@ -1,0 +1,4 @@
+NAME                            ATTACHREQUIRED   PODINFOONMOUNT   STORAGECAPACITY   TOKENREQUESTS   REQUIRESREPUBLISH   MODES        AGE
+disk-csi-driver.mks.ycloud.io   true             true             false             <unset>         false               Persistent   83m
+io.ycloud.mks.disk-csi-driver   true             true             false             <unset>         false               Persistent   83m
+ru.yandex.s3.csi                false            true             false             <unset>         false               Persistent   66s

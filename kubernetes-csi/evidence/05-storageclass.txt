@@ -1,0 +1,2 @@
+NAME     PROVISIONER        RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
+csi-s3   ru.yandex.s3.csi   Delete          Immediate           false                  22s

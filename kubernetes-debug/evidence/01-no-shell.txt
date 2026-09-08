@@ -1,0 +1,12 @@
+### Проверка: distroless-образ не содержит shell и утилит
+### Команда: kubectl exec nginx-distroless -c nginx -- sh
+OCI runtime exec failed: exec failed: unable to start container process: exec: "sh": executable file not found in $PATH
+command terminated with exit code 127
+
+### Команда: kubectl exec nginx-distroless -c nginx -- /bin/bash
+OCI runtime exec failed: exec failed: unable to start container process: exec: "/bin/bash": stat /bin/bash: no such file or directory
+command terminated with exit code 127
+
+### Команда: kubectl exec nginx-distroless -c nginx -- ls
+OCI runtime exec failed: exec failed: unable to start container process: exec: "ls": executable file not found in $PATH
+command terminated with exit code 127

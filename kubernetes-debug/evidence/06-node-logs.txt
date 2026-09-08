@@ -1,0 +1,99 @@
+### Шаг 6. Доступ к ФС ноды и к логам pod'а с distroless nginx
+### Дата: 2026-09-06 23:06:51 +05
+
+### Как kubelet хранит логи на ноде (три уровня, связанные симлинками):
+  /var/log/containers/<pod>_<ns>_<container>-<id>.log
+        -> /var/log/pods/<ns>_<pod>_<uid>/<container>/<N>.log
+              -> /var/lib/docker/containers/<id>/<id>-json.log   (реальный файл, runtime=docker)
+  N — порядковый номер запуска контейнера: 0 — первый, 1 — после рестарта.
+
+### !!! ЛОВУШКА: симлинки абсолютные, а корень ноды примонтирован в /host
+Внутри отладочного pod'а 'cat $POD_DIR/nginx/0.log' падает с
+'No such file or directory', потому что симлинк указывает на /var/lib/docker/...,
+и этот путь резолвится в КОРНЕ ОТЛАДОЧНОГО POD'А, где такого каталога нет.
+Решение — раскрыть ссылку вручную и добавить префикс /host:
+  cat /host$(readlink $POD_DIR/nginx/1.log)
+Альтернатива — chroot, тогда абсолютные пути резолвятся корректно:
+  chroot /host /bin/sh -c 'cat /var/log/pods/<...>/nginx/1.log'
+
+=== Симлинки в /host/var/log/containers/ ===
+lrwxrwxrwx    1 root     root            90 Sep  3 09:56 nginx-distroless_default_debugger-17823e27f3c7971baf324d67076368c9c5f458dc4a5c127b6661fd7a07705b92.log -> /var/log/pods/default_nginx-distroless_ad258391-c255-4c7c-a1cc-be842c6b0b1f/debugger/0.log
+lrwxrwxrwx    1 root     root            91 Sep  6 11:04 nginx-distroless_default_debugger2-44ec7e9a0d0732d9ecc84adb9a01229cf7893f21271fb4db173a2ab48209d9e0.log -> /var/log/pods/default_nginx-distroless_ad258391-c255-4c7c-a1cc-be842c6b0b1f/debugger2/0.log
+lrwxrwxrwx    1 root     root            87 Sep  3 09:49 nginx-distroless_default_nginx-9fb8773244a015fc269cf492380928f76c13722f108247cf88c31508bbce3b5d.log -> /var/log/pods/default_nginx-distroless_ad258391-c255-4c7c-a1cc-be842c6b0b1f/nginx/0.log
+lrwxrwxrwx    1 root     root            87 Sep  6 10:32 nginx-distroless_default_nginx-ba7dc2440ca0195e31ad717b57d72da8d5249c6381311be62e696e575e478294.log -> /var/log/pods/default_nginx-distroless_ad258391-c255-4c7c-a1cc-be842c6b0b1f/nginx/1.log
+
+=== Каталог логов pod'а на ноде ===
+POD_DIR=/host/var/log/pods/default_nginx-distroless_ad258391-c255-4c7c-a1cc-be842c6b0b1f
+
+/host/var/log/pods/default_nginx-distroless_ad258391-c255-4c7c-a1cc-be842c6b0b1f:
+total 20
+drwxr-xr-x    5 root     root          4096 Sep  6 11:04 .
+drwxr-x---   24 root     root          4096 Sep  6 18:03 ..
+drwxr-xr-x    2 root     root          4096 Sep  3 09:56 debugger
+drwxr-xr-x    2 root     root          4096 Sep  6 11:04 debugger2
+drwxr-xr-x    2 root     root          4096 Sep  6 10:32 nginx
+
+/host/var/log/pods/default_nginx-distroless_ad258391-c255-4c7c-a1cc-be842c6b0b1f/debugger:
+total 12
+drwxr-xr-x    2 root     root          4096 Sep  3 09:56 .
+drwxr-xr-x    5 root     root          4096 Sep  6 11:04 ..
+lrwxrwxrwx    1 root     root           165 Sep  3 09:56 0.log -> /var/lib/docker/containers/17823e27f3c7971baf324d67076368c9c5f458dc4a5c127b6661fd7a07705b92/17823e27f3c7971baf324d67076368c9c5f458dc4a5c127b6661fd7a07705b92-json.log
+
+/host/var/log/pods/default_nginx-distroless_ad258391-c255-4c7c-a1cc-be842c6b0b1f/debugger2:
+total 12
+drwxr-xr-x    2 root     root          4096 Sep  6 11:04 .
+drwxr-xr-x    5 root     root          4096 Sep  6 11:04 ..
+lrwxrwxrwx    1 root     root           165 Sep  6 11:04 0.log -> /var/lib/docker/containers/44ec7e9a0d0732d9ecc84adb9a01229cf7893f21271fb4db173a2ab48209d9e0/44ec7e9a0d0732d9ecc84adb9a01229cf7893f21271fb4db173a2ab48209d9e0-json.log
+
+/host/var/log/pods/default_nginx-distroless_ad258391-c255-4c7c-a1cc-be842c6b0b1f/nginx:
+total 16
+drwxr-xr-x    2 root     root          4096 Sep  6 10:32 .
+drwxr-xr-x    5 root     root          4096 Sep  6 11:04 ..
+lrwxrwxrwx    1 root     root           165 Sep  3 09:49 0.log -> /var/lib/docker/containers/9fb8773244a015fc269cf492380928f76c13722f108247cf88c31508bbce3b5d/9fb8773244a015fc269cf492380928f76c13722f108247cf88c31508bbce3b5d-json.log
+lrwxrwxrwx    1 root     root           165 Sep  6 10:32 1.log -> /var/lib/docker/containers/ba7dc2440ca0195e31ad717b57d72da8d5249c6381311be62e696e575e478294/ba7dc2440ca0195e31ad717b57d72da8d5249c6381311be62e696e575e478294-json.log
+
+=== Проверка ловушки: тот же симлинк без /host и с /host ===
+nginx/0.log -> /var/lib/docker/containers/9fb8773244a015fc269cf492380928f76c13722f108247cf88c31508bbce3b5d/9fb8773244a015fc269cf492380928f76c13722f108247cf88c31508bbce3b5d-json.log
+   cat $T        : No such file or directory (симлинк резолвится в корне pod-а)
+   cat /host$T   : OK, 1 строк
+nginx/1.log -> /var/lib/docker/containers/ba7dc2440ca0195e31ad717b57d72da8d5249c6381311be62e696e575e478294/ba7dc2440ca0195e31ad717b57d72da8d5249c6381311be62e696e575e478294-json.log
+   cat $T        : No such file or directory (симлинк резолвится в корне pod-а)
+   cat /host$T   : OK, 5 строк
+
+### КОМАНДА ПОЛУЧЕНИЯ ЛОГОВ distroless nginx С ФС НОДЫ:
+POD_DIR=$(ls -d /host/var/log/pods/default_nginx-distroless_*)
+cat /host$(readlink $POD_DIR/nginx/1.log)
+
+=== nginx/1.log — текущий запуск контейнера (сырой JSON-формат docker) ===
+{"log":"10.244.0.126 - - [07/Sep/2026:01:58:22 +0800] \"GET / HTTP/1.1\" 200 612 \"-\" \"curl/8.22.0\" \"-\"\n","stream":"stdout","time":"2026-09-06T17:58:22.664103727Z"}
+{"log":"10.244.0.126 - - [07/Sep/2026:01:58:22 +0800] \"GET / HTTP/1.1\" 200 612 \"-\" \"curl/8.22.0\" \"-\"\n","stream":"stdout","time":"2026-09-06T17:58:22.701288644Z"}
+{"log":"10.244.0.126 - - [07/Sep/2026:01:58:22 +0800] \"GET / HTTP/1.1\" 200 612 \"-\" \"curl/8.22.0\" \"-\"\n","stream":"stdout","time":"2026-09-06T17:58:22.731259775Z"}
+{"log":"10.244.0.126 - - [07/Sep/2026:01:58:22 +0800] \"GET / HTTP/1.1\" 200 612 \"-\" \"curl/8.22.0\" \"-\"\n","stream":"stdout","time":"2026-09-06T17:58:22.755037648Z"}
+{"log":"10.244.0.126 - - [07/Sep/2026:01:58:22 +0800] \"GET / HTTP/1.1\" 200 612 \"-\" \"curl/8.22.0\" \"-\"\n","stream":"stdout","time":"2026-09-06T17:58:22.774906434Z"}
+
+=== nginx/0.log — предыдущий запуск контейнера (доступен только с ноды!) ===
+{"log":"10.244.0.111 - - [03/Sep/2026:17:55:51 +0800] \"GET / HTTP/1.1\" 200 612 \"-\" \"curl/8.22.0\" \"-\"\n","stream":"stdout","time":"2026-09-03T09:55:51.290635256Z"}
+
+=== Логи эфемерного контейнера debugger2 лежат рядом ===
+debugger
+debugger2
+nginx
+
+-- debugger2/0.log (последние 5 строк) --
+(пусто — debugger2 запущен как 'sleep infinity' и ничего не пишет в stdout;
+ важно само наличие файла: логи эфемерных контейнеров хранятся так же, как обычных)
+
+=== Для сравнения: тот же лог через API (kubectl logs) ===
+$ kubectl logs nginx-distroless -c nginx
+10.244.0.126 - - [07/Sep/2026:01:58:22 +0800] "GET / HTTP/1.1" 200 612 "-" "curl/8.22.0" "-"
+10.244.0.126 - - [07/Sep/2026:01:58:22 +0800] "GET / HTTP/1.1" 200 612 "-" "curl/8.22.0" "-"
+10.244.0.126 - - [07/Sep/2026:01:58:22 +0800] "GET / HTTP/1.1" 200 612 "-" "curl/8.22.0" "-"
+10.244.0.126 - - [07/Sep/2026:01:58:22 +0800] "GET / HTTP/1.1" 200 612 "-" "curl/8.22.0" "-"
+10.244.0.126 - - [07/Sep/2026:01:58:22 +0800] "GET / HTTP/1.1" 200 612 "-" "curl/8.22.0" "-"
+
+$ kubectl logs nginx-distroless -c nginx --previous   # предыдущий запуск
+10.244.0.111 - - [03/Sep/2026:17:55:51 +0800] "GET / HTTP/1.1" 200 612 "-" "curl/8.22.0" "-"
+
+Вывод: содержимое совпадает, но на ноде лог лежит в сыром JSON-формате docker
+(поля log/stream/time), а kubectl logs отдаёт только поле log. Записи в логе —
+это те самые 5 запросов curl из шага 4 (10.244.0.126 -> GET / 200 612).

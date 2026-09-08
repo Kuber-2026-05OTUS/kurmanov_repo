@@ -1,0 +1,70 @@
+### Команда создания эфемерного контейнера (kubectl debug):
+kubectl debug -it nginx-distroless --image=nicolaka/netshoot:latest --image-pull-policy=IfNotPresent \
+  --target=nginx --container=debugger2 --profile=netadmin -- /bin/bash
+
+# Для неинтерактивного снятия доказательств контейнер создан долгоживущим:
+kubectl debug nginx-distroless --image=nicolaka/netshoot:latest --image-pull-policy=IfNotPresent \
+  --target=nginx --container=debugger2 --profile=netadmin -- sleep infinity
+
+### ephemeralContainers в спеке пода:
+[
+    {
+        "command": [
+            "/bin/bash"
+        ],
+        "image": "nicolaka/netshoot:latest",
+        "imagePullPolicy": "IfNotPresent",
+        "name": "debugger",
+        "resources": {},
+        "securityContext": {
+            "capabilities": {
+                "add": [
+                    "NET_ADMIN",
+                    "NET_RAW"
+                ]
+            }
+        },
+        "stdin": true,
+        "targetContainerName": "nginx",
+        "terminationMessagePath": "/dev/termination-log",
+        "terminationMessagePolicy": "File",
+        "tty": true
+    },
+    {
+        "command": [
+            "sleep",
+            "infinity"
+        ],
+        "image": "nicolaka/netshoot:latest",
+        "imagePullPolicy": "IfNotPresent",
+        "name": "debugger2",
+        "resources": {},
+        "securityContext": {
+            "capabilities": {
+                "add": [
+                    "NET_ADMIN",
+                    "NET_RAW"
+                ]
+            }
+        },
+        "targetContainerName": "nginx",
+        "terminationMessagePath": "/dev/termination-log",
+        "terminationMessagePolicy": "File"
+    }
+]
+
+### targetContainerName (общий PID namespace):
+debugger -> targetContainerName: nginx
+debugger2 -> targetContainerName: nginx
+
+### Статусы эфемерных контейнеров:
+debugger	{"terminated":{"containerID":"docker://17823e27f3c7971baf324d67076368c9c5f458dc4a5c127b6661fd7a07705b92","exitCode":127,"finishedAt":"2026-09-03T09:57:33Z","reason":"Error","startedAt":"2026-09-03T09:56:03Z"}}
+debugger2	{"running":{"startedAt":"2026-09-06T11:04:16Z"}}
+
+### ps -ef внутри эфемерного контейнера (доказательство общего PID namespace):
+# kubectl exec nginx-distroless -c debugger2 -- ps -ef
+PID   USER     TIME  COMMAND
+    1 root      0:00 nginx: master process nginx -g daemon off;
+    7 bird      0:00 nginx: worker process
+   26 root      0:00 sleep infinity
+   32 root      0:00 ps -ef
